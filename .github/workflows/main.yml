@@ -1,0 +1,75 @@
+name: Express app on aws-eks
+
+on:
+  push:
+    branches:
+      - 'main'
+
+env:
+  GITHUB_TOKEN: ${{ secrets.TOKEN100 }}
+
+jobs:
+  push_and_deploy:
+    name: push to aws-eks
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v3
+
+      - name: install kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: v1.15.0
+        id: install
+
+      - name: aws configure
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET }}
+          aws-region: ap-south-1
+
+      - name: Login to ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: print
+        run: |
+          echo "ECR Registry URL: ${{ steps.login-ecr.outputs.registry }}"
+
+      - name: Build and push
+        env:
+          registry: ${{ steps.login-ecr.outputs.registry }}
+          repository: new
+          image_tag: 1.1
+        run: |
+          docker build -t 427735392661.dkr.ecr.ap-south-1.amazonaws.com/images:${{ github.sha }} .
+          docker push 427735392661.dkr.ecr.ap-south-1.amazonaws.com/images:${{ github.sha }}
+
+      - name: update image
+        run: |
+          git config --global user.email "osama.patel@wohlig.com"
+          git config --global user.name "OsamaWohlig"
+          git clone git@github.com:OsamaWohlig/manifest.git
+
+          cd awseks-gitops
+          git checkout manifests
+
+          git status
+
+          yq e '.spec.template.spec.containers[0].image = "427735392661.dkr.ecr.ap-south-1.amazonaws.com/images:${{ github.sha }}"' ./deployment.yml -i
+
+          git pull
+          git add .
+          git commit -m "update new image"
+
+          git status
+
+          git remote set-url origin git@github.com:OsamaWohlig/manifest.git
+
+          git remote get-url origin
+          git branch --show-current
+
+          git push -u origin manifests
+
+          git status
