@@ -50,7 +50,7 @@ jobs:
         run: |
           git config --global user.email "osama.patel@wohlig.com"
           git config --global user.name "OsamaWohlig"
-          git clone git@github.com:OsamaWohlig/manifest.git
+          git clone https://OsamaWohlig:${{ GITHUB_TOKEN }}@github.com/gitops.git
 
           cd awseks-gitops
           git checkout manifests
