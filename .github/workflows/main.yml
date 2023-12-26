@@ -52,14 +52,8 @@ jobs:
           git config --global user.name "OsamaWohlig"
           git clone https://OsamaWohlig:${{ secrets.TOKEN100 }}@github.com/OsamaWohlig/manifest.git
 
-          cd awseks-gitops
-          git checkout manifests
-
-          git status
-
           yq e '.spec.template.spec.containers[0].image = "427735392661.dkr.ecr.ap-south-1.amazonaws.com/images:${{ github.sha }}"' ./deployment.yml -i
 
-          git pull
           git add .
           git commit -m "update new image"
 
