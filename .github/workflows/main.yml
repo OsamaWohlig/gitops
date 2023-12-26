@@ -43,8 +43,8 @@ jobs:
           repository: new
           image_tag: 1.1
         run: |
-          docker build -t 427735392661.dkr.ecr.ap-south-1.amazonaws.com/images:${{ github.sha }} .
-          docker push 427735392661.dkr.ecr.ap-south-1.amazonaws.com/images:${{ github.sha }}
+          docker build -t public.ecr.aws/y0s6x5w8/images:${{ github.sha }} .
+          docker push public.ecr.aws/y0s6x5w8/images:${{ github.sha }}
 
       - name: update image
         run: |
@@ -57,7 +57,7 @@ jobs:
 
           git status
 
-          yq e '.spec.template.spec.containers[0].image = "427735392661.dkr.ecr.ap-south-1.amazonaws.com/images:${{ github.sha }}"' ./deployment.yml -i
+          yq e '.spec.template.spec.containers[0].image = "public.ecr.aws/y0s6x5w8/images:${{ github.sha }}"' ./deployment.yml -i
 
           git pull
           git add .
