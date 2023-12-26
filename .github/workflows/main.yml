@@ -50,7 +50,7 @@ jobs:
         run: |
           git config --global user.email "osama.patel@wohlig.com"
           git config --global user.name "OsamaWohlig"
-          git clone https://OsamaWohlig:${{ secrets.TOKEN100 }}@github.com/manifest.git
+          git clone https://OsamaWohlig:${{ secrets.TOKEN100 }}@github.com/OsamaWohlig/manifest.git
 
           cd awseks-gitops
           git checkout manifests
@@ -65,10 +65,6 @@ jobs:
 
           git status
 
-          git remote set-url origin https://github.com/OsamaWohlig/manifest.git
-          git remote get-url origin
-          git branch --show-current
-
-          git push -u origin manifests
+          git push --set-upstream origin main
 
           git status
