@@ -54,7 +54,7 @@ jobs:
 
           cd manifest
           
-          yq e '.spec.template.spec.containers[0].image = "427735392661.dkr.ecr.ap-south-1.amazonaws.com/images:${{ github.sha }}"' ./deployment.yml -i
+          yq e '.spec.template.spec.containers[0].image = "427735392661.dkr.ecr.ap-south-1.amazonaws.com/images:${{ github.sha }}"' -i ./deployment.yml
 
           git add .
           git commit -m "update new image"
