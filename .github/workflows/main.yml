@@ -57,7 +57,7 @@ jobs:
           yq e '.spec.template.spec.containers[0].image = "427735392661.dkr.ecr.ap-south-1.amazonaws.com/images:${{ github.sha }}"' -i ./deployment.yml
 
           git add .
-          git commit -m "update new image"
+          git commit --allow-empty -m "update new image"
 
           git status
 
